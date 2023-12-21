@@ -3,7 +3,7 @@
 # Some files are only relevent to me, and might contain private information
 # (git forge URLs, which gpg keys to use, ...). They are encrypted using
 # git-crypt to be extra safe.
-# All of them are included under the file below so, if you wish to reuse my
+# All of them are included under the file below. So, if you wish to reuse my
 # config, you'll need to delete that setting. Otherwise git will complain.
 [include]
     path = personal_config
@@ -44,6 +44,6 @@
         }; f"
     ck = "checkout"
     s = "status"
-    # Inspired, then evolved from:
+    # Inspired by, then evolved from:
     # https://www.micah.soy/posts/setting-up-git-identities/
     identity = "!~/.config/git/scripts/identity.sh"
