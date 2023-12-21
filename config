@@ -27,10 +27,14 @@
     useConfigOnly = true
 
 [alias]
-    lg-inline = "log --graph --branches --all --date=human --color --format='%C(bold dim green)%h%C(auto) - %C(yellow)%<(12)%cr %C(bold)→%C(reset) %s%C(dim white) - %an %C(bold green)<sig>%G?</sig>%GS%C(reset cyan)%d%C(reset)'"
+    ck = "checkout"
+    s = "status"
+
+    # custom git log (inline)
     # sed part courtesy of: https://stackoverflow.com/a/32038784
-    lg = "!f() { \
-        git lg-inline $@ |\
+    lgi = "!f() { \
+        git log --graph --branches --all --date=human --color $@ \
+            --format='%C(bold dim green)%h%C(auto) - %C(yellow)%<(12)%cr %C(bold)→%C(reset) %s%C(dim white) - %an %C(bold green)<sig>%G?</sig>%GS%C(reset cyan)%d%C(reset)' | \
         sed \
             -e 's#<sig>G</sig>#Good Signature: #' \
             -e 's#<sig>B</sig>#\\x1b[31mBAD#' \
@@ -39,11 +43,15 @@
             -e 's#<sig>Y</sig>#\\x1b[33mExpired Key#' \
             -e 's#<sig>R</sig>#\\x1b[31mRevoked#' \
             -e 's#<sig>E</sig>#\\x1b[33mMissing Key#' \
-            -e 's#<sig>N</sig>##' | \
+            -e 's#<sig>N</sig>##'; \
+    }; f"
+
+    # custom git log (always opens in pager)
+    lg = "!f() { \
+        git lgi $@ | \
         less -cr; \
-        }; f"
-    ck = "checkout"
-    s = "status"
+    }; f"
+
     # Inspired by, then evolved from:
     # https://www.micah.soy/posts/setting-up-git-identities/
     identity = "!~/.config/git/scripts/identity.sh"
