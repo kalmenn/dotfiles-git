@@ -1,3 +1,5 @@
+# My personal git config. You're free to reuse any part of it.
+
 # Some files are only relevent to me, and might contain private information
 # (git forge URLs, which gpg keys to use, ...). They are encrypted using
 # git-crypt to be extra safe.
@@ -41,6 +43,7 @@
         less -cr; \
         }; f"
     ck = "checkout"
-    s = "status"	
+    s = "status"
+    # Inspired, then evolved from:
     # https://www.micah.soy/posts/setting-up-git-identities/
     identity = "!~/.config/git/scripts/identity.sh"
