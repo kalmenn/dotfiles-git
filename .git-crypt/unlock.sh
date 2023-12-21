@@ -5,6 +5,9 @@
 # config broken until the repo is decrypted.
 # However, decrypting with git-crypt unlock is not possible without a working
 # git config (it needs it to figure out which gpg key to use for decrypting)
+#
+# For now, this is hardcoded for my key. So if I ever give other people access,
+# I guess: TODO: decrypt using the first matching key in gpg, or throw an error
 
 git_crypt_key="/tmp/git-crypt_key.tmp";
 
