@@ -1,6 +1,7 @@
 #!/bin/sh
 
 identities="$HOME/.local/share/git/identities";
+mkdir -p "$identities";
 
 function yes_or_no { # courtesy of: https://stackoverflow.com/a/29436423
     while true; do
