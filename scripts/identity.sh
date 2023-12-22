@@ -2,8 +2,19 @@
 
 identities="$HOME/.local/share/git/identities";
 
+function yes_or_no { # courtesy of: https://stackoverflow.com/a/29436423
+    while true; do
+        read -p "$* [y/n]: " yn
+        case $yn in
+            [Yy]*) return 0 ;;  
+            [Nn]*) return 1 ;;
+        esac
+    done
+}
+
 function get_identity() {
-    local filepath="$identities/$1";
+    filepath="$identities/$1";
+    identity="$1"; # TODO: match from partial names and set this to the correct one
     sigkey=$(git config -f "$filepath" user.signingKey);
     name=$(git config -f "$filepath" user.name)
     email=$(git config -f "$filepath" user.email);
@@ -23,9 +34,9 @@ function display_parts() {
 }
 
 function display_identity() {
-    local $name $email $sigkey;
+    local name email sigkey;
     get_identity $1;
-    display_parts "$1" "$name" "$email" "$sigkey";
+    display_parts "$identity" "$name" "$email" "$sigkey";
 }
 
 function import_identity() {
@@ -91,6 +102,20 @@ case $1 in
         echo "imported into $filepath :"
         display_identity "$identity";
     ;;
+    remove)
+        if [ -z "$2" ]; then
+            echo "USAGE:";
+            echo "    git identity remove <identity>";
+            echo;
+            echo "Removes a saved identity. This is unrecoverable; You'll need to re-import / add it yourself again.";
+            exit 1;
+        fi
+
+        get_identity "$2";
+
+        display_identity "$identity";
+        yes_or_no "Are you sure ou want to remove this identity ?" && rm "$filepath";
+    ;;
     list)
         list_identities;
     ;;
@@ -102,7 +127,7 @@ case $1 in
         echo;
         echo "COMMANDS:"
         echo "    import: import an identity from a gpg key"
-        echo "    remove: removed a saved identity";
+        echo "    remove: removes a saved identity";
         echo "    set: sets the identity of the current git repo"
         echo "    show: show a saved identity or the identity of the current repo"
         echo "    list: list all saved identities"
