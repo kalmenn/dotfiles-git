@@ -130,6 +130,7 @@ case $1 in
         echo "    import: import an identity from a gpg key";
         echo "    remove: removes a saved identity";
         echo "    set: sets the identity of the current git repo";
+        echo "    link: links the global identity file to your current git repo.";
         echo "    show: show a saved identity or the identity of the current repo";
         echo "    list: list all saved identities";
         exit 1;
