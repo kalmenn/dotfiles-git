@@ -73,7 +73,7 @@ function import_identity() {
 
 function list_identities() {
     if [ -z "$(ls -A "$identities")" ]; then
-        echo "no identities to display";
+        echo "No identities to display";
         exit 0;
     fi
     local sigkey name email;
@@ -101,7 +101,7 @@ case $1 in
         fi
         import_identity "$2" "$identity";
 
-        echo "imported into $filepath :"
+        echo "Imported into $filepath :"
         display_identity "$identity";
     ;;
     remove)
@@ -148,7 +148,9 @@ case $1 in
         if [ -z "$2" ]; then
             display_parts "current" "$(git config user.name)" "$(git config user.email)" "$(git config user.signingKey)";
         else
-            display_identity "$2";
+            get_identity "$2";
+            display_identity "$identity";
+            echo "Located in: $filepath"
         fi
     ;;
     *)
@@ -158,12 +160,11 @@ case $1 in
         echo "Saved identities can be found here: $identities";
         echo;
         echo "COMMANDS:";
-        echo "    import: import an identity from a gpg key";
-        echo "    remove: removes a saved identity";
-        echo "    set: sets the identity of the current git repo";
-        echo "    include: links the global identity file to your current git repo.";
-        echo "    show: show a saved identity or the identity of the current repo";
-        echo "    list: list all saved identities";
+        echo "    import: Imports an identity from a gpg key";
+        echo "    remove: Removes a saved identity";
+        echo "    set: Sets the identity of the current git repo";
+        echo "    show: Show a saved identity or the identity of the current repo";
+        echo "    list: List all saved identities";
         exit 1;
     ;;
 esac
