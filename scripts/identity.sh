@@ -5,9 +5,9 @@ mkdir -p "$identities";
 
 function yes_or_no { # courtesy of: https://stackoverflow.com/a/29436423
     while true; do
-        read -p "$* [y/n]: " yn
+        read -p "$* [y/n]: " yn;
         case $yn in
-            [Yy]*) return 0 ;;  
+            [Yy]*) return 0 ;;
             [Nn]*) return 1 ;;
         esac
     done
@@ -17,7 +17,7 @@ function get_identity() {
     filepath="$identities/$1";
     identity="$1"; # TODO: match from partial names and set this to the correct one
     sigkey=$(git config -f "$filepath" user.signingKey);
-    name=$(git config -f "$filepath" user.name)
+    name=$(git config -f "$filepath" user.name);
     email=$(git config -f "$filepath" user.email);
 }
 
@@ -56,8 +56,8 @@ function import_identity() {
     local name=$(printf "$uid" | sed -Ee "s/$uid_regex/\1/" | xargs);
     local email=$(printf "$uid" | sed -Ee "s/$uid_regex/\4/");
 
-    git config -f "$filepath" user.name "$name"
-    git config -f "$filepath" user.email "$email"
+    git config -f "$filepath" user.name "$name";
+    git config -f "$filepath" user.email "$email";
 
     local keyid=$(gpg -K --with-colon $1 | awk -F: '$12~/.*s.*/ {print $5; exit}');
     # TODO: if multiple found, bring up a dialog to select the right key
@@ -87,9 +87,9 @@ case $1 in
     import)
         if [ -z "$2" ]; then
             echo "USAGE:";
-            echo "    git identity import <gpg_key_id> [identity_file_name]"
+            echo "    git identity import <gpg_key_id> [identity_file_name]";
             echo;
-            echo "Imports an identity from a gpg key. If no filename is provided, it will by default to the identifier you provided for your gpg key"
+            echo "Imports an identity from a gpg key. If no filename is provided, it will by default to the identifier you provided for your gpg key";
             exit 1;
         fi
 
@@ -126,12 +126,12 @@ case $1 in
         echo;
         echo "Saved identities can be found here: $identities";
         echo;
-        echo "COMMANDS:"
-        echo "    import: import an identity from a gpg key"
+        echo "COMMANDS:";
+        echo "    import: import an identity from a gpg key";
         echo "    remove: removes a saved identity";
-        echo "    set: sets the identity of the current git repo"
-        echo "    show: show a saved identity or the identity of the current repo"
-        echo "    list: list all saved identities"
+        echo "    set: sets the identity of the current git repo";
+        echo "    show: show a saved identity or the identity of the current repo";
+        echo "    list: list all saved identities";
         exit 1;
     ;;
 esac
