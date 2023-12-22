@@ -1,6 +1,7 @@
 #!/bin/sh
 
-identities="$HOME/.local/share/git/identities";
+no_home_identities=".local/share/git/identities"
+identities="$HOME/$no_home_identities";
 mkdir -p "$identities";
 
 function yes_or_no { # courtesy of: https://stackoverflow.com/a/29436423
@@ -127,7 +128,10 @@ case $1 in
             echo;
             echo "Copies the config from an identity to the local git config.";
             echo "Using set instead of link essentially means that future changes made to the identity will not be synced with the local git config.";
-            echo "If you wish for that be the case, consider using the link subcommand.";
+            echo "If you wish for that be the case, you can manually include the identity in your local git config like so:";
+            echo;
+            echo "[include]";
+            echo "    path = ~/$no_home_identities/<identity>"
             exit 0;
         fi
 
@@ -139,17 +143,6 @@ case $1 in
         git config user.name "$name";
         [ ! -z "$email" ] && git config user.email "$email";
         [ ! -z "$sigkey" ] && git config user.signingKey "$sigkey";
-    ;;
-    include)
-        if [ -z "$2" ]; then
-            echo "USAGE:";
-            echo "    git identity include <identity>";
-            echo;
-            echo "Modifies the local git config to \"[include]\" an identity.";
-            echo "Further changes made to the identity will thus be kept in sync with the local git config.";
-            echo "Use this if you don't care about staying consistent in your commits identity.";
-            echo "If you wish for your commits to stay consistent and always refer to you in the same way, consider using the set subcommand instead.";
-        fi
     ;;
     show)
         if [ -z "$2" ]; then
