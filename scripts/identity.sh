@@ -2,6 +2,12 @@
 
 identities="$HOME/.local/share/git/identities";
 
+function get_identity() {
+    sigkey=$(git config -f "$1" user.signingKey);
+    name=$(git config -f "$1" user.name)
+    email=$(git config -f "$1" user.email);
+}
+
 function import_identity() {
     local gpg_key_id="$1"
     filepath="$identities/$2";
@@ -32,6 +38,19 @@ function import_identity() {
     fi
 }
 
+function list_identities() {
+    local sigkey name email;
+    for id_file in $identities/*; do
+        get_identity "$id_file";
+
+        printf "$name <$email>";
+        if [ ! -z $sigkey ]; then
+            printf " (signing key: $sigkey)";
+        fi
+        printf "\n";
+    done
+}
+
 case $1 in
     import)
         if [ -z "$2" ]; then
@@ -51,9 +70,14 @@ case $1 in
         echo "imported into $filepath:"
         cat "$filepath";
     ;;
+    list)
+        list_identities;
+    ;;
     *)
         echo "USAGE:";
         echo "    git identity <command>";
+        echo;
+        echo "Saved identities can be found here: $identities";
         echo;
         echo "COMMANDS:"
         echo "    import: import an identity from a gpg key"
