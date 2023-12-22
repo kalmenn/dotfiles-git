@@ -57,6 +57,10 @@ case $1 in
         echo;
         echo "COMMANDS:"
         echo "    import: import an identity from a gpg key"
+        echo "    remove: removed a saved identity";
+        echo "    set: sets the identity of the current git repo"
+        echo "    show: show a saved identity or the identity of the current repo"
+        echo "    list: list all saved identities"
         exit 1;
     ;;
 esac
