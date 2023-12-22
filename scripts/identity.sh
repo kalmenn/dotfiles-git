@@ -120,6 +120,26 @@ case $1 in
     list)
         list_identities;
     ;;
+    set)
+        if [ -z "$2" ]; then
+            echo "USAGE:";
+            echo "    git identity set <identity>";
+            echo;
+            echo "Copies the config from the requested identity file to the local repo's config.";
+            echo "Using set instead of link essentially means that future changes made to the identity file will not sync to this repo.";
+            echo "If you wish for that be the case, consider using the link subcommand.";
+            exit 0;
+        fi
+
+        get_identity "$2";
+
+        echo "Using this identity:";
+        display_identity "$identity";
+
+        git config user.name "$name";
+        [ ! -z "$email" ] && git config user.email "$email";
+        [ ! -z "$sigkey" ] && git config user.signingKey "$sigkey";
+    ;;
     *)
         echo "USAGE:";
         echo "    git identity <command>";
