@@ -140,6 +140,13 @@ case $1 in
         [ ! -z "$email" ] && git config user.email "$email";
         [ ! -z "$sigkey" ] && git config user.signingKey "$sigkey";
     ;;
+    show)
+        if [ -z "$2" ]; then
+            display_parts "current" "$(git config user.name)" "$(git config user.email)" "$(git config user.signingKey)";
+        else
+            display_identity "$2";
+        fi
+    ;;
     *)
         echo "USAGE:";
         echo "    git identity <command>";
