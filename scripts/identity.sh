@@ -87,9 +87,9 @@ case $1 in
     import)
         if [ -z "$2" ]; then
             echo "USAGE:";
-            echo "    git identity import <gpg_key_id> [identity_file_name]";
+            echo "    git identity import <gpg_key_id> [identity]";
             echo;
-            echo "Imports an identity from a gpg key. If no filename is provided, it will by default to the identifier you provided for your gpg key";
+            echo "Imports an identity from a gpg key. If no name is provided for this identity, it will by default to the identifier you provided for your gpg key";
             exit 1;
         fi
 
@@ -125,8 +125,8 @@ case $1 in
             echo "USAGE:";
             echo "    git identity set <identity>";
             echo;
-            echo "Copies the config from the requested identity file to the local repo's config.";
-            echo "Using set instead of link essentially means that future changes made to the identity file will not sync to this repo.";
+            echo "Copies the config from an identity to the local git config.";
+            echo "Using set instead of link essentially means that future changes made to the identity will not be synced with the local git config.";
             echo "If you wish for that be the case, consider using the link subcommand.";
             exit 0;
         fi
@@ -139,6 +139,17 @@ case $1 in
         git config user.name "$name";
         [ ! -z "$email" ] && git config user.email "$email";
         [ ! -z "$sigkey" ] && git config user.signingKey "$sigkey";
+    ;;
+    include)
+        if [ -z "$2" ]; then
+            echo "USAGE:";
+            echo "    git identity include <identity>";
+            echo;
+            echo "Modifies the local git config to \"[include]\" an identity.";
+            echo "Further changes made to the identity will thus be kept in sync with the local git config.";
+            echo "Use this if you don't care about staying consistent in your commits identity.";
+            echo "If you wish for your commits to stay consistent and always refer to you in the same way, consider using the set subcommand instead.";
+        fi
     ;;
     show)
         if [ -z "$2" ]; then
@@ -157,7 +168,7 @@ case $1 in
         echo "    import: import an identity from a gpg key";
         echo "    remove: removes a saved identity";
         echo "    set: sets the identity of the current git repo";
-        echo "    link: links the global identity file to your current git repo.";
+        echo "    include: links the global identity file to your current git repo.";
         echo "    show: show a saved identity or the identity of the current repo";
         echo "    list: list all saved identities";
         exit 1;
