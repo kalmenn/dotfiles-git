@@ -3,9 +3,29 @@
 identities="$HOME/.local/share/git/identities";
 
 function get_identity() {
-    sigkey=$(git config -f "$1" user.signingKey);
-    name=$(git config -f "$1" user.name)
-    email=$(git config -f "$1" user.email);
+    local filepath="$identities/$1";
+    sigkey=$(git config -f "$filepath" user.signingKey);
+    name=$(git config -f "$filepath" user.name)
+    email=$(git config -f "$filepath" user.email);
+}
+
+function display_parts() {
+    local identity="$1";
+    local name="$2";
+    local email="$3";
+    local sigkey="$4";
+
+    printf "[$identity] $name <$email>";
+    if [ ! -z $sigkey ]; then
+        printf " (signing key: $sigkey)";
+    fi
+    printf "\n";
+}
+
+function display_identity() {
+    local $name $email $sigkey;
+    get_identity $1;
+    display_parts "$1" "$name" "$email" "$sigkey";
 }
 
 function import_identity() {
@@ -39,15 +59,15 @@ function import_identity() {
 }
 
 function list_identities() {
+    if [ -z "$(ls -A "$identities")" ]; then
+        echo "no identities to display";
+        exit 0;
+    fi
     local sigkey name email;
     for id_file in $identities/*; do
-        get_identity "$id_file";
-
-        printf "$name <$email>";
-        if [ ! -z $sigkey ]; then
-            printf " (signing key: $sigkey)";
-        fi
-        printf "\n";
+        identity="$(basename "$id_file")";
+        get_identity "$identity";
+        display_parts "$identity" "$name" "$email" "$sigkey";
     done
 }
 
@@ -62,13 +82,14 @@ case $1 in
         fi
 
         if [ -z "$3" ]; then
-            import_identity "$2" "$2";
+            identity="$2";
         else
-            import_identity "$2" "$3";
+            identity="$3";
         fi
+        import_identity "$2" "$identity";
 
-        echo "imported into $filepath:"
-        cat "$filepath";
+        echo "imported into $filepath :"
+        display_identity "$identity";
     ;;
     list)
         list_identities;
