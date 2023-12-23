@@ -49,7 +49,7 @@
     # custom git log (always opens in pager)
     lg = "!f() { \
         git lgi $@ | \
-        less -cr; \
+        less --clear-screen --RAW-CONTROL-CHARS --chop-long-lines; \
     }; f"
 
     # Inspired by, then evolved from:
