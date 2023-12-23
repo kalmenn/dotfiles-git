@@ -4,6 +4,12 @@ no_home_identities=".local/share/git/identities"
 identities="$HOME/$no_home_identities";
 mkdir -p "$identities";
 
+if [ ! -z "$(git config core.editor)" ]; then
+    EDITOR="$(git config core.editor)";
+elif [ ! -z "$GIT_EDITOR" ]; then
+    EDITOR="$GIT_EDITOR";
+fi
+
 function yes_or_no { # courtesy of: https://stackoverflow.com/a/29436423
     while true; do
         read -p "$* [y/n]: " yn;
@@ -128,7 +134,7 @@ case $1 in
             echo;
             echo "Copies the config from an identity to the local git config.";
             echo "Using set instead of link essentially means that future changes made to the identity will not be synced with the local git config.";
-            echo "If you wish for that be the case, you can manually include the identity in your local git config like so:";
+            echo "If you wish for that be the case, consider using the include subcommand instead.";
             echo;
             echo "[include]";
             echo "    path = ~/$no_home_identities/<identity>"
@@ -143,6 +149,44 @@ case $1 in
         git config user.name "$name";
         [ ! -z "$email" ] && git config user.email "$email";
         [ ! -z "$sigkey" ] && git config user.signingKey "$sigkey";
+    ;;
+    include)
+        if [ -z "$2" ]; then
+            echo "USAGE:";
+            echo;
+            echo "    git identity include <identity>";
+            echo;
+            echo "Takes the path of the file in which the identity is defined and includes it in your local git config.";
+            echo "This means that any changes made to the identity will be kept in sync in this local confif, risking a loss of consistency for the identity that's shown in your commits."
+            exit 1;
+        fi
+
+        get_identity "$2";
+
+        echo "Using this identity:";
+        display_identity "$identity";
+        echo;
+
+        git_config="$GIT_DIR/config";
+
+        echo "Writing to $git_config";
+        echo;
+
+        echo -e "[include]\n    path = ~/$no_home_identities/$identity" >> "$git_config";
+
+        res=0;
+
+        set -m;
+
+        #while [ "$res" -eq 0 ]; do # TODOOOOOOOOOOOO
+            echo "Your new identity is:";
+            display_parts "" "$(git config user.name)" "$(git config user.email)" "$(git config user.signingKey)";
+            yes_or_no "Is this good (otherwise, review the config)";
+            res=$?;
+            if [ "$res" -eq 1 ]; then
+                $EDITOR "$git_config";
+            fi
+        #done
     ;;
     show)
         if [ -z "$2" ]; then
@@ -163,7 +207,8 @@ case $1 in
         echo "    import: Imports an identity from a gpg key";
         echo "    remove: Removes a saved identity";
         echo "    set: Sets the identity of the current git repo";
-        echo "    show: Show a saved identity or the identity of the current repo";
+        echo "    include: Includes the identity file in your local git config"
+        echo "    show: Show a saved identity or the identity that's currently effective";
         echo "    list: List all saved identities";
         exit 1;
     ;;
