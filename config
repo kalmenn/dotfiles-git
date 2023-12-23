@@ -34,15 +34,15 @@
     # sed part courtesy of: https://stackoverflow.com/questions/17371955/verifying-signed-git-commits/32038784#comment124980964_32038784
     lgi = "!f() { \
         git log --graph --branches --all --date=human --color $@ \
-            --format='%C(bold dim green)%h%C(auto) - %C(yellow)%<(12)%cr %C(bold)→%C(reset) %s%C(dim white) - %an %C(bold green)<sig>%G?</sig>%GS%C(reset cyan)%d%C(reset)' | \
+            --format='%C(bold dim green)%h%C(auto) - %C(yellow)%<(12)%cr %C(bold)→%C(reset) %s%C(dim white) - %an <sig>%G?</sig>%C(reset dim green)%GS%C(reset cyan)%d%C(reset)' | \
         sed \
-            -e 's#<sig>G</sig>#Good Signature: #' \
-            -e 's#<sig>B</sig>#\\x1b[31mBAD#' \
-            -e 's#<sig>U</sig>#\\x1b[33mUnknown Trust: #' \
-            -e 's#<sig>X</sig>#Good | Expired#' \
-            -e 's#<sig>Y</sig>#\\x1b[33mExpired Key#' \
-            -e 's#<sig>R</sig>#\\x1b[31mRevoked#' \
-            -e 's#<sig>E</sig>#\\x1b[33mMissing Key#' \
+            -e 's#<sig>G</sig>#\\x1b[1;32mGood Signature: #' \
+            -e 's#<sig>B</sig>#\\x1b[1;31mBAD#' \
+            -e 's#<sig>U</sig>#\\x1b[1;33mUnknown Trust: #' \
+            -e 's#<sig>X</sig>#\\x1b[1;32mGood (later expired)#' \
+            -e 's#<sig>Y</sig>#\\x1b[1;33mExpired Key#' \
+            -e 's#<sig>R</sig>#\\x1b[1;31mRevoked#' \
+            -e 's#<sig>E</sig>#\\x1b[1;33mMissing Key#' \
             -e 's#<sig>N</sig>##'; \
     }; f"
 
