@@ -34,8 +34,11 @@ function display_parts() {
     local email="$3";
     local sigkey="$4";
 
-    printf "[$identity] $name <$email>";
-    if [ ! -z $sigkey ]; then
+    if [ ! -z "$identity" ]; then
+        printf "[$identity] ";
+    fi
+    printf "$name <$email>";
+    if [ ! -z "$sigkey" ]; then
         printf " (signing key: $sigkey)";
     fi
     printf "\n";
@@ -190,7 +193,7 @@ case $1 in
     ;;
     show)
         if [ -z "$2" ]; then
-            display_parts "current" "$(git config user.name)" "$(git config user.email)" "$(git config user.signingKey)";
+            display_parts "" "$(git config user.name)" "$(git config user.email)" "$(git config user.signingKey)";
         else
             get_identity "$2";
             display_identity "$identity";
