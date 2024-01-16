@@ -35,7 +35,7 @@
     # sed part courtesy of: https://stackoverflow.com/questions/17371955/verifying-signed-git-commits/32038784#comment124980964_32038784
     lgi = "!f() { \
         git log --graph --branches --all --date=human --color $@ \
-            --format='%C(bold dim green)%h%C(auto) - %C(yellow)%<(12)%cr %C(bold)→%C(reset) %s%C(bold black) - %an%C(reset bold yellow)%d %C(reset)<sig>%G?</sig>%C(reset dim white)%GS%C(reset)' | \
+            --format='%C(bold dim green)%h%C(auto) - %C(yellow)%cr %C(bold)→%C(reset) %s%C(bold black) - %an%C(reset bold yellow)%d %C(reset)<sig>%G?</sig>%C(reset dim white)%GS%C(reset)' | \
         sed \
             -e 's#<sig>G</sig>#\\x1b[1;32mGood Signature: #' \
             -e 's#<sig>B</sig>#\\x1b[1;31mBAD#' \
