@@ -36,8 +36,8 @@
         git log --graph --branches --all --date=human --color $@ \
             --format='%C(bold dim green)%h%C(auto) - %C(yellow)%cr %C(bold)→%C(reset) %s%C(reset bold yellow)%d <an>%an</an> <sig>%G?</sig> <sn>%GS</sn> %C(reset)' | \
         sed \
-            -e 's#<an>\\(.*\\)</an> <sig>N</sig> <sn>.*</sn>#\\x1b[0;2;3m- \\1#' \
-            -e 's#<an>\\(.*\\)</an> <sig>E</sig> <sn>.*</sn>#\\x1b[1;33mMissing Key: \\x1b[0;2;3m\\1#' \
+            -e 's#<an>\\(.*\\)</an> <sig>N</sig> <sn>.*</sn>#\\x1b[0;2;3;37m- \\1#' \
+            -e 's#<an>\\(.*\\)</an> <sig>E</sig> <sn>.*</sn>#\\x1b[1;33mMissing Key: \\x1b[0;2;3;37m\\1#' \
             \
             -e 's#<an>.*</an> <sig>\\([^N]\\)</sig>#<sig>\\1</sig>#' \
             \
@@ -47,7 +47,7 @@
             -e 's#<sig>U</sig>#\\x1b[1;33mUnknown Trust:#' \
             -e 's#<sig>Y</sig>#\\x1b[1;33mExpired Key:#' \
             -e 's#<sig>B</sig>#\\x1b[1;31mBAD:#' \
-            -e 's#<sn>\\(.*\\)</sn>#\\x1b[0;2;3m\\1#'; \
+            -e 's#<sn>\\(.*\\)</sn>#\\x1b[0;2;3;37m\\1#'; \
     }; f"
 
     # custom git log (always opens in pager)
