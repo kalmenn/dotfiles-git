@@ -33,6 +33,8 @@
 [alias]
     ck = "checkout"
     s = "status"
+    b = "branch"
+    c = "commit"
 
     # custom git log (inline)
     lgi = "!f() { \
