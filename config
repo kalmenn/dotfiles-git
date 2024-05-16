@@ -27,6 +27,9 @@
 [user]
     useConfigOnly = true
 
+[push]
+    default = upstream
+
 [alias]
     ck = "checkout"
     s = "status"
